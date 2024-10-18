@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use App\Traits\OnboardingTrait;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Validation\ValidationException;
 
 class OnboardingController extends Controller
 {
@@ -28,6 +29,9 @@ class OnboardingController extends Controller
         try {
             $this->validateAndStoreUserInfo($request);
             return redirect()->route('onboarding.address_info');
+        } catch (ValidationException $e) {
+            Log::error('Error submitting User Info form: ' . $e->getMessage());
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (Exception $e) {
             Log::error('Error submitting User Info form: ' . $e->getMessage());
             return redirect()->back()->with('error', 'There was an issue submitting your user information. Please try again.');
@@ -37,6 +41,9 @@ class OnboardingController extends Controller
     public function getAddressInfo()
     {
         try {
+            if (!session()->has('user_info')) {
+                return redirect()->route('onboarding.user_info')->with('error', 'Please complete the user information first.');
+            }
             $countries = Config::get('countries.countries');
             $addressInfo = $this->getAddressInfoFromSession();
             return view('onboarding.address_info', compact('addressInfo', 'countries'));
@@ -55,6 +62,9 @@ class OnboardingController extends Controller
                 return redirect()->route('onboarding.confirmation');
             }
             return redirect()->route('onboarding.payment_info');
+        } catch (ValidationException $e) {
+            Log::error('Error submitting Address Info form: ' . $e->getMessage());
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (Exception $e) {
             Log::error('Error submitting Address Info form: ' . $e->getMessage());
             return redirect()->back()->with('error', 'There was an issue submitting your address information. Please try again.');
@@ -64,6 +74,9 @@ class OnboardingController extends Controller
     public function getPaymentInfo()
     {
         try {
+            if (!session()->has('address_info')) {
+                return redirect()->route('onboarding.address_info')->with('error', 'Please complete the address information first.');
+            }
             $paymentInfo = $this->getPaymentInfoFromSession();
             return view('onboarding.payment_info', compact('paymentInfo'));
         } catch (Exception $e) {
@@ -77,6 +90,9 @@ class OnboardingController extends Controller
         try {
             $this->validateAndStorePaymentInfo($request);
             return redirect()->route('onboarding.confirmation');
+        } catch (ValidationException $e) {
+            Log::error('Error submitting Payment Info form: ' . $e->getMessage());
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (Exception $e) {
             Log::error('Error submitting Payment Info form: ' . $e->getMessage());
             return redirect()->back()->with('error', 'There was an issue submitting your payment information. Please try again.');
@@ -86,6 +102,9 @@ class OnboardingController extends Controller
     public function getConfirmationInfo()
     {
         try {
+            if (!session()->has('user_info') || !session()->has('address_info') || !session()->has('payment_info') && session('user_info')['subscription_type'] == 'premium') {
+                return redirect()->route('onboarding.user_info')->with('error', 'Please complete all the required steps.');
+            }
             $confirmationInfo = [
                 'user_info' => $this->getUserInfoFromSession(),
                 'address_info' => $this->getAddressInfoFromSession(),

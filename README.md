@@ -7,10 +7,13 @@ As a developer, I usually switch between two modes: the "Learning Mode" and the 
 
 Does that mean I can't do it with Symfony? Absolutely not! In fact, I love a good learning opportunity, and if there aren't any new tasks soon, I might just start building this in Symfony for fun! 😊
 
+
+
 ### Prerequisites
 - PHP 8.3.11
 - Laravel Framework 11.28.1
 - Composer
+- Symfony CLI 
 
 ### Installation
 1. **Clone the Repository**
@@ -21,8 +24,9 @@ Does that mean I can't do it with Symfony? Absolutely not! In fact, I love a goo
 
 3. **Environment Setup**
    - Copy `.env.example` to `.env`.
+   - Generate Application Key: Run the following command to generate an         application key (required for encryption and other functionalities):
+        php artisan key:generate
    - Update any required environment variables as needed.
-
 4. **Run Migrations**
    To set up the database tables, run the migrations:
    php artisan migrate

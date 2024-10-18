@@ -28,7 +28,7 @@ trait OnboardingTrait
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email|unique:user_details,email',
                 'phone' => 'required|numeric|min:10',
                 'subscription_type' => 'required|in:free,premium',
             ]);
