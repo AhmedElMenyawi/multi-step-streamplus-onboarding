@@ -2,7 +2,10 @@
 
 Welcome to my multi-step onboarding project, developed as part of the assigned task. This project collects user, address, and payment information in a step-by-step process, concluding with a final confirmation. The onboarding flow is designed to be clear and extendable for future enhancements. Below are the details to help you set up and run the project locally, specifically for review purposes.
 
-## Getting Started
+### Getting Started (Why Laravel?)
+As a developer, I usually switch between two modes: the "Learning Mode" and the "Performance Mode." For this project, I chose to be in "Performance Mode" because my past experience with Laravel allows me to work efficiently and effectively. While I believe Symfony might be better for larger, more scalable projects and would have given me a chance to learn more, the nature of this task, being part of a job interview, made me choose what I know best.
+
+Does that mean I can't do it with Symfony? Absolutely not! In fact, I love a good learning opportunity, and if there aren't any new tasks soon, I might just start building this in Symfony for fun! 😊
 
 ### Prerequisites
 - PHP 8.3.11
